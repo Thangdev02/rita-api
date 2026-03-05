@@ -1,11 +1,12 @@
 const jsonServer = require('json-server')
 const path = require('path')
+const express = require('express') // thêm dòng này
 
 const server = jsonServer.create()
 const router = jsonServer.router(path.join(__dirname, 'db.json'))
 const middlewares = jsonServer.defaults()
 
-// Allow CORS from anywhere (needed for frontend on different domain)
+// Allow CORS
 server.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', '*')
@@ -15,6 +16,10 @@ server.use((req, res, next) => {
 })
 
 server.use(middlewares)
+
+// serve static images
+server.use("/menu", express.static(path.join(__dirname, "public/menu")))
+
 server.use(router)
 
 const PORT = process.env.PORT || 3000
